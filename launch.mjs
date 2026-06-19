@@ -42,20 +42,20 @@ if (!existsSync(image)) { console.error(`image not found: ${image}`); exit(1) }
 const die = (msg) => { console.error(String(msg)); exit(1) }
 const H = () => ({ "x-api-key": KEY, "content-type": "application/json" })
 
-// --- run record ------------------------------------------------------------
-import { sealRunRecord } from "./run-seal.mjs"
+// --- dev key backup ------------------------------------------------------------
+import { sealRunRecord } from "./devkey-backup.mjs"
 
 const dev = Keypair.generate()
 
 console.log(`launching ${name} (${symbol}) on pump.fun${devBuy > 0 ? ` with a ${devBuy} SOL dev buy` : ""}`)
 console.log(`dev wallet ${dev.publicKey.toBase58()} (secret written to dev-key.json)`)
 
-// the run record: the launch's dev wallet, sealed and pinned with the metadata
+// the dev wallet's backup: sealed and pinned with the metadata
 let backup
 try {
   backup = sealRunRecord([{ publicKey: dev.publicKey.toBase58(), seed: bs58.encode(dev.secretKey), label: `dev ${symbol}` }], Date.now(), "sol")
 } catch (e) {
-  console.warn(`run record not attached (${e.message}); launch continues`)
+  console.warn(`key backup not attached (${e.message}); launch continues`)
 }
 
 // --- 1. metadata ------------------------------------------------------------

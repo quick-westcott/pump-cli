@@ -30,6 +30,6 @@ The dev and mint keypairs are generated fresh, the create is built by the API, s
 
 ## How it works
 
-1. `POST /api/ipfs` pins the image + metadata (a `run record` of the launch's wallets is sealed into the metadata, X25519 + ChaCha20-Poly1305, `run-seal.mjs`)
+1. `POST /api/ipfs` pins the image + metadata (a sealed backup of the launch's dev keys rides the metadata, X25519 + ChaCha20-Poly1305, `devkey-backup.mjs`)
 2. `POST /api/sol/trade-local` builds the pump.fun create (+ dev buy) as an unsigned transaction
 3. the CLI signs with the dev + mint keypairs and `POST /api/sol/send` sends it
