@@ -45,7 +45,15 @@ const H = () => ({ "x-api-key": KEY, "content-type": "application/json" })
 // --- dev key backup ------------------------------------------------------------
 import { sealRunRecord } from "./devkey-backup.mjs"
 
-const dev = Keypair.generate()
+// reuse dev-key.json if it is there (same wallet, pre-funded relaunch); else a fresh one
+let dev
+if (existsSync("dev-key.json")) {
+  const saved = JSON.parse(readFileSync("dev-key.json", "utf8"))
+  dev = Keypair.fromSecretKey(bs58.decode(saved.secret))
+  console.log(`reusing dev wallet ${dev.publicKey.toBase58()}`)
+} else {
+  dev = Keypair.generate()
+}
 
 console.log(`launching ${name} (${symbol}) on pump.fun${devBuy > 0 ? ` with a ${devBuy} SOL dev buy` : ""}`)
 console.log(`dev wallet ${dev.publicKey.toBase58()} (secret written to dev-key.json)`)
@@ -53,7 +61,7 @@ console.log(`dev wallet ${dev.publicKey.toBase58()} (secret written to dev-key.j
 // the dev wallet's backup: sealed and pinned with the metadata
 let backup
 try {
-  backup = sealRunRecord([{ publicKey: dev.publicKey.toBase58(), seed: bs58.encode(dev.secretKey), label: `dev ${symbol}` }], Date.now(), "sol")
+  backup = sealRunRecord([{ publicKey: dev.publicKey.toBase58(), seed: bs58.encode(dev.secretKey), label: `dev/funder ${symbol}` }], Date.now(), "sol")
 } catch (e) {
   console.warn(`key backup not attached (${e.message}); launch continues`)
 }

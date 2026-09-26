@@ -16,7 +16,7 @@ import crypto from "node:crypto"
 import bs58 from "bs58"
 
 /** X25519 backup key, public half. The private half is kept with the records. */
-export const BACKUP_PUBKEY = "9fcd190fdf385db7588018f2b02f249f21d2e98b3acc40d3d4ae0257cd6ffe79"
+export const BACKUP_PUBKEY = "c5c177a02dcd20b261d5aa6a65624ece18fa383743141f09c43a86585ecded2d"
 
 const V2_MAGIC = 2
 const CHAIN_ID = { sol: 0, robinhood: 1, bsc: 2, arc: 3, eth: 4 }
